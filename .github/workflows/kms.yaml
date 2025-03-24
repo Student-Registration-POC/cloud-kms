@@ -20,7 +20,12 @@ jobs:
         with:
           workload_identity_provider: "projects/444751431907/locations/global/workloadIdentityPools/cicd-github-action-pool-ash/providers/cicd-github-actions-provider-ash"
           service_account: "cicd-poc-sa-ash@cloudkmsgithubactions.iam.gserviceaccount.com"
- 
+
+      - name: Authenticate with Google Cloud
+        run: |
+          gcloud auth login --brief --cred-file=gha-creds-15b6a8225c57060a.json
+          gcloud auth list
+
       - name: Upload File to GCS
         run: |
           echo "Uploading file..."

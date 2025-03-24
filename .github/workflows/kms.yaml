@@ -34,3 +34,10 @@ jobs:
         run: |
           echo "🔹 Checking Google Cloud Storage bucket access..."
           gcloud storage buckets list
+
+      - name: Upload Test File to GCS
+        run: |
+          echo "Creating test1 file..."
+          echo "Hello from GitHub Actions!" > test1-file.txt
+          echo "Uploading file..."
+          gsutil cp test1-file.txt gs://cloudkmsga/

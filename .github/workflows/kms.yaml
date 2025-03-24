@@ -1,40 +1,27 @@
-name: GCS Deployment
-
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the main branch
+name: Upload to GCS
+ 
 on:
   push:
-    branches: [ main ]
-    
-permissions:
-  id-token: write  # Allow GitHub Actions to request OIDC tokens
-  contents: read   # Optional: If your workflow accesses the repository contents
-  
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+    branches:
+      - main  # Adjust branch as needed
+ 
 jobs:
-  # This workflow contains a single job called "deploy"
-  deploy:
-    # The type of runner that the job will run on
+  upload:
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    permissions:
+      id-token: write
+      contents: read
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
-
-    # Setup gcloud CLI
-    - name: Authenticate to Google Cloud using OIDC
-      id: auth
-      uses: google-github-actions/auth@v2
-      with:
-        token_format: 'access_token'
-        workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
-        service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
-
-    - name: Deploy via GCS
-      run: |
-        gcloud auth list
-        gcloud --version
-        gsutil ls
-        gsutil -m rm -rf gs://cloudkmsga/* || echo "$?"
-        gsutil -m cp -r * gs://cloudkmsga/
+      - name: Checkout Code
+        uses: actions/checkout@v3
+ 
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: "projects/444751431907/locations/global/workloadIdentityPools/cicd-github-action-pool-ash/providers/cicd-github-actions-provider-as"
+          service_account: "cicd-poc-sa-ash@cloudkmsgithubactions.iam.gserviceaccount.com"
+ 
+      - name: Upload File to GCS
+        run: |
+          echo "Uploading file..."
+          gsutil -m cp -r * YOUR_FILE_PATH gs://cloudkmsga/

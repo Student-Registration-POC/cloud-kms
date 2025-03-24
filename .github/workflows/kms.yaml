@@ -1,27 +1,28 @@
 name: Upload to GCS
- 
+
 on:
   push:
     branches:
-      - main  # Adjust branch as needed
- 
+      - main  # Adjust as needed
+
 jobs:
-  upload:
+  deploy:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write
       contents: read
+      id-token: write  # ✅ Required for OIDC authentication
+
     steps:
-      - name: Checkout Code
+      - name: Checkout repository
         uses: actions/checkout@v3
- 
+
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v1
         with:
           workload_identity_provider: "projects/444751431907/locations/global/workloadIdentityPools/cicd-github-action-pool-ash/providers/cicd-github-actions-provider-ash"
           service_account: "cicd-poc-sa-ash@cloudkmsgithubactions.iam.gserviceaccount.com"
           token_format: "access_token"  # ✅ Ensures correct token format
-       
+
       - name: Verify Authentication
         run: |
           echo "🔹 Checking Google Cloud authentication..."
@@ -32,10 +33,14 @@ jobs:
           echo "🔹 Printing access token..."
           gcloud auth print-access-token
 
-      - name: Upload File to GCS
+      - name: Test GCS Access (List Buckets)
         run: |
-          gcloud auth list
-          gcloud --version
-          gsutil ls
+          echo "🔹 Checking Google Cloud Storage bucket access..."
+          gcloud storage buckets list
+
+      - name: Upload Test File to GCS
+        run: |
+          echo "Creating test1 file..."
+          echo "Hello from GitHub Actions!" > test1-file.txt
           echo "Uploading file..."
-          gsutil -m cp -r * gs://cloudkmsga/
+          gcloud storage cp test1-file.txt gs://cloudkmsga/ --log-http

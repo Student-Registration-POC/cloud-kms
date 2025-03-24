@@ -27,4 +27,4 @@ jobs:
           gcloud --version
           gsutil ls
           echo "Uploading file..."
-          gsutil -m cp -r gs://cloudkmsga /tmp/storage
+          gsutil -m cp -r * gs://cloudkmsga/

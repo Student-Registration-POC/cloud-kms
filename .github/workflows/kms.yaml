@@ -23,4 +23,4 @@ jobs:
 
       - name: Upload File to GCS
         run: |
-          gcloud storage cp test1-file.txt gs://cloudkmsga/ --log-http
+          gcloud storage cp test.txt gs://cloudkmsga/ --log-http

@@ -19,6 +19,7 @@ jobs:
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v1
         with:
+          token_format: access_token  # ✅ Ensures correct authentication
           workload_identity_provider: "projects/444751431907/locations/global/workloadIdentityPools/cicd-github-action-pool-ash/providers/cicd-github-actions-provider-ash"
           service_account: "cicd-poc-sa-ash@cloudkmsgithubactions.iam.gserviceaccount.com"
 
@@ -28,7 +29,7 @@ jobs:
           gcloud auth list
           gcloud config list
           echo "🔹 Printing access token..."
-          gcloud auth print-access-token  # ✅ Fixing invalid command
+          gcloud auth print-access-token
 
       - name: Test GCS Access (List Buckets)
         run: |

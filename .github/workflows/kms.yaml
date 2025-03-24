@@ -19,15 +19,17 @@ jobs:
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v1
         with:
-          token_format: access_token  # ✅ Ensures correct authentication
           workload_identity_provider: "projects/444751431907/locations/global/workloadIdentityPools/cicd-github-action-pool-ash/providers/cicd-github-actions-provider-ash"
           service_account: "cicd-poc-sa-ash@cloudkmsgithubactions.iam.gserviceaccount.com"
+          token_format: "access_token"  # ✅ Ensures correct token format
 
       - name: Verify Authentication
         run: |
           echo "🔹 Checking Google Cloud authentication..."
           gcloud auth list
-          gcloud config list
+          echo "🔹 Setting active account..."
+          gcloud config set account cicd-poc-sa-ash@cloudkmsgithubactions.iam.gserviceaccount.com
+          gcloud auth list
           echo "🔹 Printing access token..."
           gcloud auth print-access-token
 
@@ -41,4 +43,4 @@ jobs:
           echo "Creating test1 file..."
           echo "Hello from GitHub Actions!" > test1-file.txt
           echo "Uploading file..."
-          gsutil cp test1-file.txt gs://cloudkmsga/
+          gcloud storage cp test1-file.txt gs://cloudkmsga/ --log-http

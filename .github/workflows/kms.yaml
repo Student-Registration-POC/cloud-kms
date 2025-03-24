@@ -33,6 +33,7 @@ jobs:
 
     - name: Deploy via GCS
       run: |
+        gcloud auth list
         gcloud --version
         gsutil ls
         gsutil -m rm -rf gs://cloudkmsga/* || echo "$?"

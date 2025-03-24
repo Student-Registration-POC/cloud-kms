@@ -23,8 +23,7 @@ jobs:
 
       - name: Upload File to GCS
         run: |
-          gcloud auth list
-          gcloud --version
-          gsutil ls
+          echo "Creating test1 file..."
+          echo "Hello from GitHub Actions!" > test1-file.txt
           echo "Uploading file..."
-          gcloud storage -m cp -r * gs://cloudkmsga/
+          gcloud storage cp test1-file.txt gs://cloudkmsga/ --log-http

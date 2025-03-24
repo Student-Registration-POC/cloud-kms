@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write  # ✅ Needed for OIDC authentication
+      id-token: write  # ✅ Required for OIDC authentication
 
     steps:
       - name: Checkout repository
@@ -27,7 +27,8 @@ jobs:
           echo "🔹 Checking Google Cloud authentication..."
           gcloud auth list
           gcloud config list
-          gcloud sts credentials print-access-token  # ✅ Check if a valid token is received
+          echo "🔹 Printing access token..."
+          gcloud auth print-access-token  # ✅ Fixing invalid command
 
       - name: Test GCS Access (List Buckets)
         run: |

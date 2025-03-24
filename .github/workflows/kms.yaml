@@ -1,3 +1,10 @@
+name: Upload to GCS
+
+on:
+  push:
+    branches:
+      - main  # Adjust as needed
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -17,10 +24,12 @@ jobs:
 
       - name: Verify Authentication
         run: |
+          echo "🔹 Checking Google Cloud authentication..."
           gcloud auth list
           gcloud config list
-          gcloud sts credentials print-access-token  # 🔹 Check if valid token is received
+          gcloud sts credentials print-access-token  # ✅ Check if a valid token is received
 
       - name: Test GCS Access (List Buckets)
         run: |
+          echo "🔹 Checking Google Cloud Storage bucket access..."
           gcloud storage buckets list

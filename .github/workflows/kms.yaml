@@ -24,4 +24,4 @@ jobs:
       - name: Upload File to GCS
         run: |
           echo "Uploading file..."
-          gsutil -m cp -r * YOUR_FILE_PATH gs://cloudkmsga/
+          gsutil -m cp -r * gs://cloudkmsga/

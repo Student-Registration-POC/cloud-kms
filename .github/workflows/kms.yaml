@@ -21,6 +21,10 @@ jobs:
           workload_identity_provider: "projects/444751431907/locations/global/workloadIdentityPools/cicd-github-action-pool-ash/providers/cicd-github-actions-provider-ash"
           service_account: "cicd-poc-sa-ash@cloudkmsgithubactions.iam.gserviceaccount.com"
 
+      - name: Set GCP Project
+        run: |
+          gcloud config set project cloudkmsgithubactions
+
       - name: Upload File to GCS
         run: |
           echo "Creating newt file..."
@@ -28,11 +32,9 @@ jobs:
           echo "Uploading file to GCS..."
           gcloud storage cp newt.txt gs://cloudkmsga/
 
-      - name: Download File from GCS to Cloud Shell
+      - name: Download File from GCS
         run: |
-          echo "Downloading file from GCS to Cloud Shell..."
-          gcloud auth activate-service-account cicd-poc-sa-ash@cloudkmsgithubactions.iam.gserviceaccount.com --key-file=/home/aishwaryakahane595/cicd-sa-key.json
-          gcloud config set project cloudkmsgithubactions
+          echo "Downloading file from GCS..."
           gcloud storage cp gs://cloudkmsga/newt.txt .
 
       - name: Encrypt and Decrypt the File using KMS

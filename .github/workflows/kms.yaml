@@ -23,7 +23,7 @@ jobs:
 
       - name: Upload File to GCS
         run: |
-          echo "Creating test2 file..."
-          echo "Hello from GitHub Actions!" > test2.txt
+          echo "Creating newt file..."
+          echo "Hello aish from GitHub Actions!" > newt.txt
           echo "Uploading file..."
-          gcloud storage cp test2.txt gs://cloudkmsga/ --log-http
+          gcloud storage cp newt.txt gs://cloudkmsga/ --log-http

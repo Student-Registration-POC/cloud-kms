@@ -25,6 +25,17 @@ jobs:
         run: |
           gcloud config set project cloudkmsgithubactions
 
+      - name: Create KMS Key Ring and Key
+        run: |
+          echo "Creating KMS Key Ring..."
+          gcloud kms keyrings create ash-key-ring --location=global || echo "Key Ring already exists"
+
+          echo "Creating KMS Key..."
+          gcloud kms keys create ash-key \
+            --location=global \
+            --keyring=ash-key-ring \
+            --purpose=encryption || echo "Key already exists"
+
       - name: Upload File to GCS
         run: |
           echo "Creating newt file..."
@@ -41,16 +52,16 @@ jobs:
         run: |
           echo "Encrypting file..."
           gcloud kms encrypt \
-            --key my-first-key \
-            --keyring my-key-ring \
+            --key ash-key \
+            --keyring ash-key-ring \
             --location global  \
             --plaintext-file newt.txt \
             --ciphertext-file encrypt.txt
 
           echo "Decrypting file..."
           gcloud kms decrypt \
-            --key my-first-key \
-            --keyring my-key-ring \
+            --key ash-key \
+            --keyring ash-key-ring \
             --location global  \
             --ciphertext-file encrypt.txt \
             --plaintext-file decrypt.txt

@@ -1,12 +1,12 @@
-name: Upload to GCS
- 
+name: Upload and Process File in GCS
+
 on:
   push:
     branches:
       - main  # Adjust branch as needed
- 
+
 jobs:
-  upload:
+  process-file:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
- 
+
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v1
         with:
@@ -25,5 +25,35 @@ jobs:
         run: |
           echo "Creating newt file..."
           echo "Hello aish from GitHub Actions!" > newt.txt
-          echo "Uploading file..."
-          gcloud storage cp newt.txt gs://cloudkmsga/ --log-http
+          echo "Uploading file to GCS..."
+          gcloud storage cp newt.txt gs://cloudkmsga/
+
+      - name: Download File from GCS to Cloud Shell
+        run: |
+          echo "Downloading file from GCS to Cloud Shell..."
+          gcloud auth activate-service-account cicd-poc-sa-ash@cloudkmsgithubactions.iam.gserviceaccount.com --key-file=/home/aishwaryakahane595/cicd-sa-key.json
+          gcloud config set project cloudkmsgithubactions
+          gcloud storage cp gs://cloudkmsga/newt.txt .
+
+      - name: Encrypt and Decrypt the File using KMS
+        run: |
+          echo "Encrypting file..."
+          gcloud kms encrypt \
+            --key my-first-key \
+            --keyring my-key-ring \
+            --location global  \
+            --plaintext-file newt.txt \
+            --ciphertext-file encrypt.txt
+
+          echo "Decrypting file..."
+          gcloud kms decrypt \
+            --key my-first-key \
+            --keyring my-key-ring \
+            --location global  \
+            --ciphertext-file encrypt.txt \
+            --plaintext-file decrypt.txt
+
+      - name: Upload Encrypted and Decrypted Files to GCS
+        run: |
+          echo "Uploading encrypted and decrypted files back to GCS..."
+          gcloud storage cp encrypt.txt decrypt.txt gs://cloudkmsga/

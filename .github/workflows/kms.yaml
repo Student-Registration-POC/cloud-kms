@@ -38,10 +38,10 @@ jobs:
 
       - name: Upload File to GCS
         run: |
-          echo "Creating newt file..."
-          echo "Hello aish from GitHub Actions!" > newt.txt
+          echo "Creating demo file..."
+          echo "Hello aishwarya from GitHub Actions!" > demo.txt
           echo "Uploading file to GCS..."
-          gcloud storage cp newt.txt gs://cloudkmsga/
+          gcloud storage cp demo.txt gs://cloudkmsga/
 
       - name: Download File from GCS
         run: |

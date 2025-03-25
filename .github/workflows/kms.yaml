@@ -46,7 +46,7 @@ jobs:
       - name: Download File from GCS
         run: |
           echo "Downloading file from GCS..."
-          gcloud storage cp gs://cloudkmsga/newt.txt .
+          gcloud storage cp gs://cloudkmsga/demo.txt .
 
       - name: Encrypt and Decrypt the File using KMS
         run: |
@@ -55,7 +55,7 @@ jobs:
             --key ash-key \
             --keyring ash-key-ring \
             --location global  \
-            --plaintext-file newt.txt \
+            --plaintext-file demo.txt \
             --ciphertext-file encrypt.txt
 
           echo "Decrypting file..."
